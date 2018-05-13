@@ -1,13 +1,28 @@
 ## Description
 
-This package is used to manage state for various types of projects, notably with react
+This package is used to manage state in react
 
 ## Basic Usage
 
 *install*
 
-`npm install --save wizebin/nexustate`
+`npm install --save wizebin/nexustate-react`
 
-*import*
+*use*
 
-`import { getNexustate } from 'nexustate';`
+    import { withNexustate } from 'nexustate-react';
+    import React, { Component } from 'react';
+
+    class ExampleComponent extends Component {
+      componentWillMount() {
+        this.props.nexus.listen({ key: example, initialLoad: true });
+      }
+      render() {
+        const { example } = this.props.data;
+        return (
+          <div>{example}</div>
+        );
+      }
+    }
+
+    export default withNexustate(ExampleComponent);
