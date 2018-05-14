@@ -67,27 +67,27 @@ export default function WithNexustate(WrappedComponent) {
     }
 
     getData = (data) => {
-      this.dataManager.get(data);
+      return this.dataManager.get(data);
     }
 
     setData = (data) => {
-      this.dataManager.set(data);
+      return this.dataManager.set(data);
     }
 
     deleteData = (key) => {
-      this.dataManager.delete(key);
+      return this.dataManager.delete(key);
     }
 
     setKeyData = (key, data) => {
-      this.dataManager.setKey(key, data);
+      return this.dataManager.setKey(key, data);
     }
 
     pushData = (key, data) => {
-      this.dataManager.push(key, data);
+      return this.dataManager.push(key, data);
     }
 
     cache = (data) => {
-      this.cacheManager.set(data);
+      return this.cacheManager.set(data);
     }
 
     render() {
