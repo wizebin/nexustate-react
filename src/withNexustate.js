@@ -19,7 +19,7 @@ export default function WithNexustate(WrappedComponent) {
 
       this.dataManager = getNexustate();
       this.cacheManager = getNexustate('cache');
-      this.nexusFunctions = { push: this.pushData, set: this.setData, delete: this.deleteData, setKey: this.setKeyData, listen: this.listenForChange, listenMultiple: this.listenForMultiple };
+      this.nexusFunctions = { push: this.pushData, set: this.setData, delete: this.deleteData, setKey: this.setKeyData, listen: this.listenForChange, listenMultiple: this.listenForMultiple, get: this.getData };
     }
 
     componentWillUnmount() {
@@ -64,6 +64,10 @@ export default function WithNexustate(WrappedComponent) {
       }
 
       return this.setState({ data: fullChanges });
+    }
+
+    getData = (data) => {
+      this.dataManager.get(data);
     }
 
     setData = (data) => {
