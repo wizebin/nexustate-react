@@ -10,9 +10,7 @@ function getComposedState(initialData, key, value) {
   return initialData;
 }
 
-export default function WithNexustate(WrappedComponent, options = { cloneState: false }) {
-  const { cloneState } = options;
-
+export default function WithNexustate(WrappedComponent) {
   return class extends Component {
     constructor(props) {
       super(props);
@@ -30,10 +28,8 @@ export default function WithNexustate(WrappedComponent, options = { cloneState: 
     }
 
     setComposedState = (key, value) => {
-      const initialData = cloneState ? clone(this.state.data) : this.state.data;
-
       this.setState({
-        data: getComposedState(initialData, key, value)
+        data: getComposedState(this.state.data, key, value)
       });
     }
 
