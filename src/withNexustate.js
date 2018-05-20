@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { set } from 'objer'
 import { getNexustate } from 'nexustate';
+import clone from 'clone';
 
 function getComposedState(initialData, key, value) {
   if (key === null) return value;
@@ -9,7 +10,9 @@ function getComposedState(initialData, key, value) {
   return initialData;
 }
 
-export default function WithNexustate(WrappedComponent) {
+export default function WithNexustate(WrappedComponent, options = { cloneState: false }) {
+  const { cloneState } = options;
+
   return class extends Component {
     constructor(props) {
       super(props);
@@ -26,44 +29,44 @@ export default function WithNexustate(WrappedComponent) {
       this.dataManager.unlistenComponent(this);
     }
 
+    setComposedState = (key, value) => {
+      const initialData = cloneState ? clone(this.state.data) : this.state.data;
+
+      this.setState({
+        data: getComposedState(initialData, key, value)
+      });
+    }
+
     listenForChange = ({ key, alias, transform, initialLoad = true } = {}) => {
-      let initialData = this.state.data;
       const listener = { key, alias, callback: this.handleChange, component: this, transform };
-      console.log('listening');
       this.dataManager.listen(listener);
 
       if (initialLoad) {
         const listenData = this.dataManager.getForListener(listener);
-        initialData = getComposedState(initialData, listenData.alias || listenData.key, listenData.value)
+        this.setComposedState(listenData.alias || listenData.key, listenData.value)
       }
-
-      this.setState({ data: initialData });
     }
 
     listenForMultiple = (listeners, { initialLoad = false } = {}) => {
-      let initialData = this.state.data;
+      let initialData = cloneState ? clone(this.state.data) : this.state.data;
 
       for (let listenerdex = 0; listenerdex < listeners.length; listenerdex += 1) {
         this.listenForChange(listeners[listenerdex]);
         if (initialLoad) {
           const listenData = this.dataManager.getForListener(listeners[listenerdex]);
-          initialData = getComposedState(initialData, listenData.alias || listenData.key, listenData.value)
+          this.setComposedState(initialData, listenData.alias || listenData.key, listenData.value)
         }
       }
-
-      this.setState({ data: initialData });
     }
 
     handleChange = (changeEvents) => {
-      let fullChanges = this.state.data;
+      let fullChanges = cloneState ? clone(this.state.data) : this.state.data;
 
       for (let changedex = 0; changedex < changeEvents.length; changedex += 1) {
         const changeEvent = changeEvents[changedex];
         const { alias, key, value } = changeEvent;
-        fullChanges = getComposedState(fullChanges, alias || key, value);
+          this.setComposedState(fullChanges, alias || key, value);
       }
-
-      return this.setState({ data: fullChanges });
     }
 
     getData = (data) => {
