@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { set } from 'objer'
 import { getNexustate } from 'nexustate';
-import clone from 'clone';
 
 function getComposedState(initialData, key, value) {
   if (key === null) return value;
@@ -44,24 +43,20 @@ export default function WithNexustate(WrappedComponent) {
     }
 
     listenForMultiple = (listeners, { initialLoad = false } = {}) => {
-      let initialData = cloneState ? clone(this.state.data) : this.state.data;
-
       for (let listenerdex = 0; listenerdex < listeners.length; listenerdex += 1) {
         this.listenForChange(listeners[listenerdex]);
         if (initialLoad) {
           const listenData = this.dataManager.getForListener(listeners[listenerdex]);
-          this.setComposedState(initialData, listenData.alias || listenData.key, listenData.value)
+          this.setComposedState(listenData.alias || listenData.key, listenData.value)
         }
       }
     }
 
     handleChange = (changeEvents) => {
-      let fullChanges = cloneState ? clone(this.state.data) : this.state.data;
-
       for (let changedex = 0; changedex < changeEvents.length; changedex += 1) {
         const changeEvent = changeEvents[changedex];
         const { alias, key, value } = changeEvent;
-          this.setComposedState(fullChanges, alias || key, value);
+          this.setComposedState(alias || key, value);
       }
     }
 
