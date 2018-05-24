@@ -32,12 +32,12 @@ export default function WithNexustate(WrappedComponent) {
       });
     }
 
-    listenForChange = ({ key, alias, transform, initialLoad = true } = {}) => {
-      const listener = { key, alias, callback: this.handleChange, component: this, transform };
-      this.dataManager.listen(listener);
+    listenForChange = (listener = { key: '', alias: null, transform: null, initialLoad: true, noChildUpdates: false, noParentUpdates: false }) => {
+      const modifiedListener = { ...listener, callback: this.handleChange, component: this };
+      this.dataManager.listen(modifiedListener);
 
-      if (initialLoad) {
-        const listenData = this.dataManager.getForListener(listener);
+      if (listener.initialLoad) {
+        const listenData = this.dataManager.getForListener(modifiedListener);
         this.setComposedState(listenData.alias || listenData.key, listenData.value)
       }
     }
