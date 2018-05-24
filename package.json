@@ -1,6 +1,6 @@
 {
   "name": "nexustate-react",
-  "version": "1.0.51",
+  "version": "1.0.52",
   "description": "Nexusoft state management",
   "main": "./dist/src/index.js",
   "scripts": {
