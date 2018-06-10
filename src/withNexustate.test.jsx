@@ -86,13 +86,13 @@ describe("withNexustate", () => {
     parent.update();
     expect(testClass.props().data).toEqual({ test5: { a: { b: { c: 'hello' } } } });
   });
-  it("receives updates from two segments", () => {
-    const parent = mountTestClass([{ segment: 'a', key: 'test6', initialLoad: true }, { segment: 'b', key: 'test6', initialLoad: true, alias: 'test7' }]);
+  it("receives updates from two shards", () => {
+    const parent = mountTestClass([{ shard: 'a', key: 'test6', initialLoad: true }, { shard: 'b', key: 'test6', initialLoad: true, alias: 'test7' }]);
     const testClass = parent.find(TestClass);
     parent.update();
     expect(testClass.props().data).toEqual({ test6: undefined, test7: undefined });
-    testClass.props().nexus.setKey('test6', 'hello', { segment: 'b' });
-    testClass.props().nexus.setKey('test6', 'silly', { segment: 'a' });
+    testClass.props().nexus.setKey('test6', 'hello', { shard: 'b' });
+    testClass.props().nexus.setKey('test6', 'silly', { shard: 'a' });
     parent.update();
     expect(testClass.props().data).toEqual({ test6: 'silly', test7: 'hello' });
   });
@@ -106,12 +106,12 @@ describe("withNexustate", () => {
     expect(testClass.props().data).toEqual({ test8: 'hello' });
   });
   it("listens for everything is key is null", () => {
-    const parent = mountTestClass([{ segment: 'test9', key: null, initialLoad: true }]);
+    const parent = mountTestClass([{ shard: 'test9', key: null, initialLoad: true }]);
     const testClass = parent.find(TestClass);
     parent.update();
     expect(testClass.props().data).toEqual({ });
-    testClass.props().nexus.setKey('test10', 'hello', { segment: 'test9' });
-    testClass.props().nexus.setKey('test11', 'super', { segment: 'test9' });
+    testClass.props().nexus.setKey('test10', 'hello', { shard: 'test9' });
+    testClass.props().nexus.setKey('test11', 'super', { shard: 'test9' });
     parent.update();
     expect(testClass.props().data).toEqual({ test10: 'hello', test11: 'super' });
   });
