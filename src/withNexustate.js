@@ -19,7 +19,7 @@ export default function withNexustate(WrappedComponent) {
 
       this.shardState = getShardedNexustate();
 
-      this.nexusFunctions = { push: this.pushData, set: this.setData, delete: this.deleteData, setKey: this.setKeyData, listen: this.listenForChange, listenMultiple: this.listenForMultiple, get: this.getData };
+      this.nexusFunctions = { push: this.pushData, set: this.setData, delete: this.deleteData, setKey: this.setKeyData, listen: this.listenForChange, listenMultiple: this.listenForMultiple, get: this.getData, unlistenAll: this.unlistenFromAll, unlisten: this.unlisten };
     }
 
     createShard = (shard, options) => {
@@ -27,6 +27,14 @@ export default function withNexustate(WrappedComponent) {
     }
 
     componentWillUnmount() {
+      return this.unlistenFromAll();
+    }
+
+    unlisten = (key, { shard = 'default' } = {}) => {
+      return this.shardState.getShard(shard).unlisten(key, this.handleChange);
+    }
+
+    unlistenFromAll = () => {
       const shards = values(this.shardState.getAllShards());
       for (let sharddex = 0; sharddex < shards.length; sharddex += 1) {
         shards[sharddex].unlistenComponent(this);
@@ -69,24 +77,24 @@ export default function withNexustate(WrappedComponent) {
       }
     }
 
-    getData = (data, { shard = 'default' } = {}) => {
-      return this.shardState.getShard(shard).get(data);
+    getData = (path, { shard = 'default' } = {}) => {
+      return this.shardState.getShard(shard).get(path);
     }
 
     setData = (data, { shard = 'default' } = {}) => {
       return this.shardState.getShard(shard).set(data);
     }
 
-    deleteData = (key, { shard = 'default' } = {}) => {
-      return this.shardState.getShard(shard).delete(key);
+    deleteData = (path, { shard = 'default' } = {}) => {
+      return this.shardState.getShard(shard).delete(path);
     }
 
-    setKeyData = (key, data, { shard = 'default' } = {}) => {
-      return this.shardState.getShard(shard).setKey(key, data);
+    setKeyData = (path, data, { shard = 'default' } = {}) => {
+      return this.shardState.getShard(shard).setKey(path, data);
     }
 
-    pushData = (key, data, { shard = 'default' } = {}) => {
-      return this.shardState.getShard(shard).push(key, data);
+    pushData = (path, data, { shard = 'default' } = {}) => {
+      return this.shardState.getShard(shard).push(path, data);
     }
 
     render() {
