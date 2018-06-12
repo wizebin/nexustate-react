@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { set, values } from 'objer'
 import { getShardedNexustate } from 'nexustate';
+import { Z_SYNC_FLUSH } from 'zlib';
 
 function getComposedState(initialData, key, value) {
   if (key === null) return value;
@@ -27,18 +28,21 @@ export default function withNexustate(WrappedComponent) {
     }
 
     componentWillUnmount() {
-      return this.unlistenFromAll();
+      return this.unlistenFromAll({  });
     }
 
-    unlisten = (key, { shard = 'default' } = {}) => {
-      return this.shardState.getShard(shard).unlisten(key, this.handleChange);
+    unlisten = (key, { shard = 'default', resetState = false } = {}) => {
+      const result = this.shardState.getShard(shard).unlisten(key, this.handleChange);
+      if (resetState) this.setState({ data: {} });
+      return result;
     }
 
-    unlistenFromAll = () => {
+    unlistenFromAll = ({ resetState = true } = {}) => {
       const shards = values(this.shardState.getAllShards());
       for (let sharddex = 0; sharddex < shards.length; sharddex += 1) {
         shards[sharddex].unlistenComponent(this);
       }
+      if (resetState) this.setState({ data: {} });
     }
 
     setComposedState = (key, value) => {
