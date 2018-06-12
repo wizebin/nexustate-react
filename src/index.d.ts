@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import Nexustate from 'nexustate';
+import Nexustate, { getShardedNexustate, ShardedNexustate } from 'nexustate';
 
 type KeyType = string | string[];
 
@@ -23,4 +23,4 @@ declare class NexustateWrapper extends Component<NexustateProps, any> {
 function withNexustate(Component): NexustateWrapper;
 function getNexustate(string): Nexustate;
 
-export { Nexustate, withNexustate, getNexustate }
+export { Nexustate, withNexustate, getNexustate, ShardedNexustate, getShardedNexustate }
