@@ -1,4 +1,5 @@
-import * as React from 'react';
+import { Component } from 'react';
+import Nexustate from 'nexustate';
 
 type KeyType = string | string[];
 
@@ -16,7 +17,10 @@ interface NexustateProps {
   data: object
 }
 
-declare class NexustateWrapper extends React.Component<NexustateProps, any> {
+declare class NexustateWrapper extends Component<NexustateProps, any> {
 }
 
-export default (React.Component) => NexustateWrapper;
+function withNexustate(Component): NexustateWrapper;
+function getNexustate(string): Nexustate;
+
+export { Nexustate, withNexustate, getNexustate }

@@ -3,6 +3,7 @@
   "version": "1.0.54",
   "description": "Nexusoft state management",
   "main": "./dist/src/index.js",
+  "typings": "./src/index.d.ts",
   "scripts": {
     "test": "./node_modules/.bin/jest",
     "dev": "webpack --mode development",
