@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { set } from 'objer'
+import { set, values } from 'objer'
 import { getNexustate } from 'nexustate';
 
 function getComposedState(initialData, key, value) {
@@ -21,8 +21,6 @@ export default function withNexustate(WrappedComponent) {
         default: getNexustate(),
         cache: getNexustate('cache', { noPersist: true }),
       };
-      this.dataManager = getNexustate();
-      this.cacheManager = getNexustate('cache');
       this.nexusFunctions = { push: this.pushData, set: this.setData, delete: this.deleteData, setKey: this.setKeyData, listen: this.listenForChange, listenMultiple: this.listenForMultiple, get: this.getData };
     }
 
@@ -38,7 +36,10 @@ export default function withNexustate(WrappedComponent) {
     }
 
     componentWillUnmount() {
-      this.dataManager.unlistenComponent(this);
+      const shards = values(this.dataManagerShards);
+      for (let sharddex = 0; sharddex < shards.length; sharddex += 1) {
+        shards[sharddex].unlistenComponent(this);
+      }
     }
 
     setComposedState = (key, value) => {
