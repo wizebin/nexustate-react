@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { set, values } from 'objer'
-import { getNexustate } from 'nexustate';
+import { getShardedNexustate } from 'nexustate';
 
 function getComposedState(initialData, key, value) {
   if (key === null) return value;
@@ -17,26 +17,17 @@ export default function withNexustate(WrappedComponent) {
         data: {},
       };
 
-      this.dataManagerShards = {
-        default: getNexustate(),
-        cache: getNexustate('cache', { noPersist: true }),
-      };
+      this.shardState = getShardedNexustate();
+
       this.nexusFunctions = { push: this.pushData, set: this.setData, delete: this.deleteData, setKey: this.setKeyData, listen: this.listenForChange, listenMultiple: this.listenForMultiple, get: this.getData };
     }
 
-    getShard = (shard, options) => {
-      if (!this.dataManagerShards[shard]) {
-        this.dataManagerShards[shard] = getNexustate(shard, options);
-      }
-      return this.dataManagerShards[shard];
-    }
-
     createShard = (shard, options) => {
-      return this.getShard(shard, options);
+      return this.shardState.createShard(shard, options);
     }
 
     componentWillUnmount() {
-      const shards = values(this.dataManagerShards);
+      const shards = values(this.shardState.getAllShards());
       for (let sharddex = 0; sharddex < shards.length; sharddex += 1) {
         shards[sharddex].unlistenComponent(this);
       }
@@ -49,7 +40,7 @@ export default function withNexustate(WrappedComponent) {
     }
 
     listenForChange = (listener = { shard: 'default', key: '', alias: null, transform: null, initialLoad: true, noChildUpdates: false, noParentUpdates: false }) => {
-      const manager = this.getShard(listener.shard);
+      const manager = this.shardState.getShard(listener.shard);
       const modifiedListener = { ...listener, callback: this.handleChange, component: this };
       manager.listen(modifiedListener);
 
@@ -63,7 +54,7 @@ export default function withNexustate(WrappedComponent) {
       for (let listenerdex = 0; listenerdex < listeners.length; listenerdex += 1) {
         this.listenForChange(listeners[listenerdex]);
         if (initialLoad) {
-          const manager = this.getShard(listeners[listenerdex].shard || 'default');
+          const manager = this.shardState.getShard(listeners[listenerdex].shard || 'default');
           const listenData = manager.getForListener(listeners[listenerdex]);
           this.setComposedState(listenData.alias || listenData.key, listenData.value)
         }
@@ -79,23 +70,23 @@ export default function withNexustate(WrappedComponent) {
     }
 
     getData = (data, { shard = 'default' } = {}) => {
-      return this.getShard(shard).get(data);
+      return this.shardState.getShard(shard).get(data);
     }
 
     setData = (data, { shard = 'default' } = {}) => {
-      return this.getShard(shard).set(data);
+      return this.shardState.getShard(shard).set(data);
     }
 
     deleteData = (key, { shard = 'default' } = {}) => {
-      return this.getShard(shard).delete(key);
+      return this.shardState.getShard(shard).delete(key);
     }
 
     setKeyData = (key, data, { shard = 'default' } = {}) => {
-      return this.getShard(shard).setKey(key, data);
+      return this.shardState.getShard(shard).setKey(key, data);
     }
 
     pushData = (key, data, { shard = 'default' } = {}) => {
-      return this.getShard(shard).push(key, data);
+      return this.shardState.getShard(shard).push(key, data);
     }
 
     render() {

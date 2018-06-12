@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { mount, configure } from "enzyme";
 import Adapter from 'enzyme-adapter-react-16';
 import withNexustate from "./withNexustate";
+import { getShardedNexustate } from "nexustate";
+import { has } from "objer";
 
 configure({ adapter: new Adapter() });
 
@@ -49,6 +51,7 @@ describe("withNexustate", () => {
     const testClass = parent.find(TestClass);
     parent.update();
     expect(testClass.props().data).toEqual({ test: undefined });
+    parent.unmount();
   });
   it("fills data and receives updates", () => {
     const parent = mountTestClass([{ key: 'test2', initialLoad: true }]);
@@ -58,6 +61,7 @@ describe("withNexustate", () => {
     testClass.props().nexus.setKey('test2', 'hello');
     parent.update();
     expect(testClass.props().data).toEqual({ test2: 'hello' });
+    parent.unmount();
   });
   it("fills data and receives updates with aliases", () => {
     const parent = mountTestClass([{ key: 'test3', initialLoad: true, alias: 'bumpkiss' }]);
@@ -67,6 +71,7 @@ describe("withNexustate", () => {
     testClass.props().nexus.setKey('test3', 'hello');
     parent.update();
     expect(testClass.props().data).toEqual({ bumpkiss: 'hello' });
+    parent.unmount();
   });
   it("fills data and receives updates with transforms", () => {
     const parent = mountTestClass([{ key: 'test4', initialLoad: true, transform: item => item ? item + '_transformed' : item }]);
@@ -76,6 +81,7 @@ describe("withNexustate", () => {
     testClass.props().nexus.setKey('test4', 'hello');
     parent.update();
     expect(testClass.props().data).toEqual({ test4: 'hello_transformed' });
+    parent.unmount();
   });
   it("receives updates from child updates", () => {
     const parent = mountTestClass([{ key: 'test5', initialLoad: true }]);
@@ -85,6 +91,7 @@ describe("withNexustate", () => {
     testClass.props().nexus.setKey(['test5', 'a', 'b', 'c'], 'hello');
     parent.update();
     expect(testClass.props().data).toEqual({ test5: { a: { b: { c: 'hello' } } } });
+    parent.unmount();
   });
   it("receives updates from two shards", () => {
     const parent = mountTestClass([{ shard: 'a', key: 'test6', initialLoad: true }, { shard: 'b', key: 'test6', initialLoad: true, alias: 'test7' }]);
@@ -95,6 +102,7 @@ describe("withNexustate", () => {
     testClass.props().nexus.setKey('test6', 'silly', { shard: 'a' });
     parent.update();
     expect(testClass.props().data).toEqual({ test6: 'silly', test7: 'hello' });
+    parent.unmount();
   });
   it("does not load initially if flag is unset", () => {
     const parent = mountTestClass([{ key: 'test8', initialLoad: false }]);
@@ -104,6 +112,7 @@ describe("withNexustate", () => {
     testClass.props().nexus.setKey('test8', 'hello');
     parent.update();
     expect(testClass.props().data).toEqual({ test8: 'hello' });
+    parent.unmount();
   });
   it("listens for everything is key is null", () => {
     const parent = mountTestClass([{ shard: 'test9', key: null, initialLoad: true }]);
@@ -114,5 +123,18 @@ describe("withNexustate", () => {
     testClass.props().nexus.setKey('test11', 'super', { shard: 'test9' });
     parent.update();
     expect(testClass.props().data).toEqual({ test10: 'hello', test11: 'super' });
+    parent.unmount();
+  });
+  it("nexustate has no active listeners when everything is unmounted", () => {
+    const shardedNexustate = getShardedNexustate();
+    const defaultShard = shardedNexustate.getShard();
+    function assureNoListeners(root) {
+      if (has(root, 'listeners')) {
+        if (root.listeners && root.listeners.length > 0) return false;
+      }
+      if (has(root, 'subkeys')) return assureNoListeners(root.subkeys);
+      return true;
+    }
+    expect(assureNoListeners(defaultShard.listenerObject)).toEqual(true);
   });
 });
