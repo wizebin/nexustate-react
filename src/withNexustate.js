@@ -1,16 +1,22 @@
 import React, { Component } from 'react';
 import { set, values } from 'objer'
 import { getShardedNexustate } from 'nexustate';
-import { Z_SYNC_FLUSH } from 'zlib';
+import clone from 'clone';
 
-function getComposedState(initialData, key, value) {
+function getUnclonedComposedState(initialData, key, value) {
   if (key === null) return value;
 
   set(initialData, key, value);
   return initialData;
 }
 
-export default function withNexustate(WrappedComponent) {
+function getClonedComposedState(initialData, key, value) {
+  return getUnclonedComposedState(clone(initialData), key, value);
+}
+
+export default function withNexustate(WrappedComponent, { cloneState = false } = {}) {
+  const getComposedState = cloneState ? getClonedComposedState : getUnclonedComposedState;
+
   return class extends Component {
     constructor(props) {
       super(props);
