@@ -1,12 +1,12 @@
 ## Description
 
-This package is used to manage state in react
+This package is used to manage state in react using nexustate
 
 ## Basic Usage
 
 *install*
 
-`npm install --save wizebin/nexustate-react`
+`npm install --save nexustate-react`
 
 *use*
 
@@ -15,12 +15,18 @@ This package is used to manage state in react
 
     class ExampleComponent extends Component {
       componentWillMount() {
-        this.props.nexus.listen({ key: example, initialLoad: true });
+        this.props.nexus.listen({ key: 'example', initialLoad: true });
+      }
+      randomExample = () => {
+        this.props.nexus.setKey('example', '' + (Math.random() * 100));
       }
       render() {
         const { example } = this.props.data;
         return (
-          <div>{example}</div>
+          <div>
+            <div>{example}</div>
+            <button onClick={this.randomExample}>Randomize</button>
+          </div>
         );
       }
     }

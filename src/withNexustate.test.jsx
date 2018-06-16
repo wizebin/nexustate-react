@@ -57,7 +57,7 @@ describe("withNexustate", () => {
     const testClass = parent.find(TestClass);
     parent.update();
     expect(parent.find(TestClass).props().data).toEqual({ test2: undefined });
-    testClass.props().nexus.setKey('test2', 'hello');
+    testClass.props().nexus.setKey('test2', 'hello', { immediatePersist: true });
     parent.update();
     expect(parent.find(TestClass).props().data).toEqual({ test2: 'hello' });
     parent.unmount();

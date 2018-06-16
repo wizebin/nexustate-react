@@ -1,7 +1,7 @@
 {
   "name": "nexustate-react",
-  "version": "1.0.54",
-  "description": "Nexusoft state management",
+  "version": "1.0.55",
+  "description": "React nexustate state management",
   "main": "./dist/src/index.js",
   "typings": "./src/index.d.ts",
   "scripts": {
@@ -13,6 +13,7 @@
     "nexuscript",
     "object",
     "nexustate-react",
+    "nexustate",
     "get",
     "has",
     "set"
@@ -37,15 +38,15 @@
     "enzyme-adapter-react-16": "^1.1.1",
     "fsevents": "^1.2.4",
     "jest": "^23.1.0",
-    "react": "^16.3.2",
-    "react-dom": "^16.4.0",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
     "webpack": "^4.12.0",
-    "webpack-cli": "^3.0.3"
+    "webpack-cli": "^3.0.8"
   },
   "dependencies": {
     "clone": "^2.1.1",
-    "nexustate": "github:wizebin/nexustate",
-    "objer": "github:wizebin/objer"
+    "nexustate": "^1.0.20",
+    "objer": "^1.0.33"
   },
   "jest": {
     "rootDir": "src",
