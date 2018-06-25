@@ -44,8 +44,7 @@
     "webpack-cli": "^3.0.8"
   },
   "dependencies": {
-    "clone": "^2.1.1",
-    "nexustate": "^1.0.25",
+    "nexustate": "^1.0.31",
     "objer": "^1.0.33"
   },
   "jest": {
