@@ -57,7 +57,7 @@ describe("withNexustate", () => {
     const testClass = parent.find(TestClass);
     parent.update();
     expect(parent.find(TestClass).props().data).toEqual({ test2: undefined });
-    testClass.props().nexus.setKey('test2', 'hello', { immediatePersist: true });
+    testClass.props().nexus.set('test2', 'hello', { immediatePersist: true });
     parent.update();
     expect(parent.find(TestClass).props().data).toEqual({ test2: 'hello' });
     parent.unmount();
@@ -67,7 +67,7 @@ describe("withNexustate", () => {
     const testClass = parent.find(TestClass);
     parent.update();
     expect(parent.find(TestClass).props().data).toEqual({ bumpkiss: undefined });
-    testClass.props().nexus.setKey('test3', 'hello');
+    testClass.props().nexus.set('test3', 'hello');
     parent.update();
     expect(parent.find(TestClass).props().data).toEqual({ bumpkiss: 'hello' });
     parent.unmount();
@@ -77,7 +77,7 @@ describe("withNexustate", () => {
     const testClass = parent.find(TestClass);
     parent.update();
     expect(parent.find(TestClass).props().data).toEqual({ test4: undefined });
-    testClass.props().nexus.setKey('test4', 'hello');
+    testClass.props().nexus.set('test4', 'hello');
     parent.update();
     expect(parent.find(TestClass).props().data).toEqual({ test4: 'hello_transformed' });
     parent.unmount();
@@ -87,7 +87,7 @@ describe("withNexustate", () => {
     const testClass = parent.find(TestClass);
     parent.update();
     expect(parent.find(TestClass).props().data).toEqual({ test5: undefined });
-    testClass.props().nexus.setKey(['test5', 'a', 'b', 'c'], 'hello');
+    testClass.props().nexus.set(['test5', 'a', 'b', 'c'], 'hello');
     parent.update();
     expect(parent.find(TestClass).props().data).toEqual({ test5: { a: { b: { c: 'hello' } } } });
     parent.unmount();
@@ -97,8 +97,8 @@ describe("withNexustate", () => {
     const testClass = parent.find(TestClass);
     parent.update();
     expect(parent.find(TestClass).props().data).toEqual({ test6: undefined, test7: undefined });
-    testClass.props().nexus.setKey('test6', 'hello', { shard: 'b' });
-    testClass.props().nexus.setKey('test6', 'silly', { shard: 'a' });
+    testClass.props().nexus.set('test6', 'hello', { shard: 'b' });
+    testClass.props().nexus.set('test6', 'silly', { shard: 'a' });
     parent.update();
     expect(parent.find(TestClass).props().data).toEqual({ test6: 'silly', test7: 'hello' });
     parent.unmount();
@@ -108,7 +108,7 @@ describe("withNexustate", () => {
     const testClass = parent.find(TestClass);
     parent.update();
     expect(parent.find(TestClass).props().data).toEqual({ });
-    testClass.props().nexus.setKey('test8', 'hello');
+    testClass.props().nexus.set('test8', 'hello');
     parent.update();
     expect(parent.find(TestClass).props().data).toEqual({ test8: 'hello' });
     parent.unmount();
@@ -118,8 +118,8 @@ describe("withNexustate", () => {
     const testClass = parent.find(TestClass);
     parent.update();
     expect(parent.find(TestClass).props().data).toEqual({ });
-    testClass.props().nexus.setKey('test10', 'hello', { shard: 'test9' });
-    testClass.props().nexus.setKey('test11', 'super', { shard: 'test9' });
+    testClass.props().nexus.set('test10', 'hello', { shard: 'test9' });
+    testClass.props().nexus.set('test11', 'super', { shard: 'test9' });
     parent.update();
     expect(parent.find(TestClass).props().data).toEqual({ test10: 'hello', test11: 'super' });
     parent.unmount();
