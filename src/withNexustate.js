@@ -6,6 +6,7 @@ export default function withNexustate(WrappedComponent, { shardedNexustate = nul
     constructor(props) {
       super(props);
       this.agent = new NexustateAgent({ shardedNexustate: shardedNexustate || getShardedNexustate(), onChange: this.changeState, cloneState });
+      this.state = {};
     }
 
     changeState = () => this.setState(this.state);

@@ -113,13 +113,15 @@ describe("withNexustate", () => {
     expect(parent.find(TestClass).props().data).toEqual({ test8: 'hello' });
     parent.unmount();
   });
-  it("listens for everything is key is null", () => {
+  it("listens for everything is key is null", async () => {
     const parent = mountTestClass([{ shard: 'test9', key: null, initialLoad: true }]);
     const testClass = parent.find(TestClass);
     parent.update();
     expect(parent.find(TestClass).props().data).toEqual({ });
     testClass.props().nexus.set('test10', 'hello', { shard: 'test9' });
     testClass.props().nexus.set('test11', 'super', { shard: 'test9' });
+    parent.update();
+    await new Promise(resolve => setTimeout(resolve, 100));
     parent.update();
     expect(parent.find(TestClass).props().data).toEqual({ test10: 'hello', test11: 'super' });
     parent.unmount();
