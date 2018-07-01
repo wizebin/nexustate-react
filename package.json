@@ -44,7 +44,7 @@
     "webpack-cli": "^3.0.8"
   },
   "dependencies": {
-    "nexustate": "^1.0.38",
+    "nexustate": "^1.0.39",
     "objer": "^1.0.36"
   },
   "jest": {
