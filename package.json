@@ -1,6 +1,6 @@
 {
   "name": "nexustate-react",
-  "version": "1.0.69",
+  "version": "1.0.70",
   "description": "React nexustate state management",
   "main": "./dist/src/index.js",
   "typings": "./src/index.d.ts",
