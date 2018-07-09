@@ -1,7 +1,15 @@
 {
+  "plugins": [
+    "transform-class-properties",
+    "transform-es2015-block-scoping"
+  ],
   "presets": ["stage-2", "react"],
   "env": {
     "test": {
+      "plugins": [
+        "transform-class-properties",
+        "transform-es2015-block-scoping"
+      ],
       "presets": [["env", {
         "modules": "commonjs"
         }],

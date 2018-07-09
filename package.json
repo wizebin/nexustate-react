@@ -34,6 +34,8 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-es2015-block-scoping": "^6.26.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "fsevents": "^1.2.4",
@@ -44,8 +46,8 @@
     "webpack-cli": "^3.0.8"
   },
   "dependencies": {
-    "nexustate": "^1.0.40",
-    "objer": "^1.0.36"
+    "nexustate": "^1.0.42",
+    "objer": "^1.0.41"
   },
   "jest": {
     "rootDir": "src",
