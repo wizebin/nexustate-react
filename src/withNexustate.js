@@ -5,7 +5,7 @@ export default function withNexustate(WrappedComponent, { shardedNexustate = nul
   return class extends Component {
     constructor(props) {
       super(props);
-      this.agent = new NexustateAgent({ shardedNexustate: shardedNexustate || getShardedNexustate(), onChange: this.changeState, cloneState });
+      this.agent = new NexustateAgent({ shardedNexustate: shardedNexustate || getShardedNexustate(), onChange: this.changeState, cloneBeforeSet: cloneState });
       this.state = {};
     }
 

@@ -117,6 +117,7 @@ describe("withNexustate", () => {
     const parent = mountTestClass([{ shard: 'test9', key: null, initialLoad: true }]);
     const testClass = parent.find(TestClass);
     parent.update();
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(parent.find(TestClass).props().data).toEqual({ });
     testClass.props().nexus.set('test10', 'hello', { shard: 'test9' });
     testClass.props().nexus.set('test11', 'super', { shard: 'test9' });
